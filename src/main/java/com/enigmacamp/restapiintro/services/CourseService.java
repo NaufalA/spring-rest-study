@@ -18,5 +18,5 @@ public interface CourseService {
 
     String remove(String id);
 
-    Set<Course> getAll(Course filter, Boolean shouldMatchAll);
+    Set<Course> getAll(Course filter, Boolean shouldMatchAll) throws Exception;
 }

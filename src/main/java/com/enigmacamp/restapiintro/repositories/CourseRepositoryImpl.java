@@ -5,6 +5,7 @@ import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
 import com.enigmacamp.restapiintro.shared.utils.IRandomStringGenerator;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,25 +71,15 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public List<Course> findAll(String field, String value) {
-        List<Course> result = new ArrayList<>();
-        switch (field) {
-            case "title":
-                result = courses.stream()
-                        .filter(c -> c.getTitle().toLowerCase().contains(value.toLowerCase()))
-                        .collect(Collectors.toList());
-                break;
-            case "description":
-                result = courses.stream()
-                        .filter(c -> c.getDescription().toLowerCase().contains(value.toLowerCase()))
-                        .collect(Collectors.toList());
-                break;
-            case "slug":
-                result = courses.stream()
-                        .filter(c -> c.getSlug().toLowerCase().contains(value.toLowerCase()))
-                        .collect(Collectors.toList());
-                break;
-        }
-
-        return result;
+        return courses.stream()
+                .filter(c -> {
+                    try {
+                    Field lookupField = c.getClass().getDeclaredField(field);
+                    lookupField.setAccessible(true);
+                        return lookupField.get(c).toString().toLowerCase().contains(value.toLowerCase());
+                    } catch (IllegalAccessException | NoSuchFieldException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList());
     }
 }

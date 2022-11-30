@@ -6,6 +6,7 @@ import com.enigmacamp.restapiintro.repositories.CourseRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -50,28 +51,27 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Set<Course> getAll(Course filter, Boolean shouldMatchAll) {
+    public Set<Course> getAll(Course filter, Boolean shouldMatchAll) throws Exception {
         Set<Course> courseSet = new HashSet<>();
-
-        if (filter.getTitle() != null) {
-            courseSet.addAll(courseRepository.findAll("title", filter.getTitle()));
-        }
-        if (filter.getDescription() != null) {
-            if (shouldMatchAll) {
-                courseSet = courseSet.stream()
-                        .filter(c -> c.getDescription().toLowerCase().contains(filter.getDescription().toLowerCase()))
-                        .collect(Collectors.toSet());
-            } else {
-                courseSet.addAll(courseRepository.findAll("description", filter.getDescription()));
-            }
-        }
-        if (filter.getSlug() != null) {
-            if (shouldMatchAll) {
-                courseSet = courseSet.stream()
-                        .filter(c -> c.getSlug().toLowerCase().contains(filter.getSlug().toLowerCase()))
-                        .collect(Collectors.toSet());
-            } else {
-                courseSet.addAll(courseRepository.findAll("slug", filter.getSlug()));
+        Class<? extends Course> courseClass = filter.getClass();
+        Field[] fields = courseClass.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (field.get(filter) != null) {
+                courseSet.addAll(courseRepository.findAll(field.getName(), (String) field.get(filter)));
+                if (shouldMatchAll) {
+                    courseSet = courseSet.stream()
+                            .filter(c -> {
+                                try {
+                                    Field lookupField = c.getClass().getDeclaredField(field.getName());
+                                    lookupField.setAccessible(true);
+                                    return lookupField.get(c).toString().toLowerCase()
+                                            .contains(field.get(filter).toString().toLowerCase());
+                                } catch (IllegalAccessException | NoSuchFieldException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }).collect(Collectors.toSet());
+                }
             }
         }
         return courseSet;

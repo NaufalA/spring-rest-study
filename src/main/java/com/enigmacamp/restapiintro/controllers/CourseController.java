@@ -41,7 +41,7 @@ public class CourseController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "filterType", required = false) String filterType
-    ) {
+    ) throws Exception {
         if (title == null && description == null && link == null) {
             List<Course> courses = courseService.getAll();
             SuccessResponse<List<Course>> response = new SuccessResponse<>(
