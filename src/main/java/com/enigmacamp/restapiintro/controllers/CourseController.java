@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/courses")
@@ -26,7 +29,7 @@ public class CourseController {
     @PostMapping
     public ResponseEntity<CommonResponse> create(@RequestBody CreateCourseRequestDto createCourseRequestDto) {
         try {
-            Course createdCourse =courseService.create(createCourseRequestDto);
+            Course createdCourse = courseService.create(createCourseRequestDto);
             SuccessResponse<Course> response = new SuccessResponse<>(
                     HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), createdCourse
             );
@@ -40,13 +43,34 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse> getAll() {
+    public ResponseEntity<CommonResponse> getAll(
+            @RequestParam(value = "title", required = false) String title,
+            @RequestParam(value = "description", required = false) String description,
+            @RequestParam(value = "link", required = false) String link,
+            @RequestParam(value = "filterType", required = false) String filterType
+    ) {
         try {
-            List<Course> courses =courseService.getAll();
-            SuccessResponse<List<Course>> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), courses
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            if (title == null && description == null && link == null) {
+                List<Course> courses = courseService.getAll();
+                SuccessResponse<List<Course>> response = new SuccessResponse<>(
+                        HttpStatus.OK.value(), HttpStatus.OK.toString(), courses
+                );
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                Course filterModel = new Course();
+                filterModel.setTitle(title);
+                filterModel.setDescription(description);
+                filterModel.setSlug(link);
+                Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
+
+                Set<Course> courseSet = courseService.getAll(filterModel, shouldMatchAll);
+                CommonResponse response = new SuccessResponse<>(
+                        HttpStatus.OK.value(),
+                        HttpStatus.OK.toString(),
+                        courseSet
+                );
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
         } catch (Exception e) {
             ErrorResponse response = new ErrorResponse(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
@@ -107,7 +131,7 @@ public class CourseController {
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse> remove(@PathVariable("id") String id) {
         try {
-            String deletedId =courseService.remove(id);
+            String deletedId = courseService.remove(id);
             SuccessResponse<String> response = new SuccessResponse<>(
                     HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), deletedId
             );

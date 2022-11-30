@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class CourseRepositoryImpl implements CourseRepository {
@@ -65,5 +66,29 @@ public class CourseRepositoryImpl implements CourseRepository {
         } else {
             throw new NotFoundException();
         }
+    }
+
+    @Override
+    public List<Course> findAll(String field, String value) {
+        List<Course> result = new ArrayList<>();
+        switch (field) {
+            case "title":
+                result = courses.stream()
+                        .filter(c -> c.getTitle().toLowerCase().contains(value.toLowerCase()))
+                        .collect(Collectors.toList());
+                break;
+            case "description":
+                result = courses.stream()
+                        .filter(c -> c.getDescription().toLowerCase().contains(value.toLowerCase()))
+                        .collect(Collectors.toList());
+                break;
+            case "slug":
+                result = courses.stream()
+                        .filter(c -> c.getSlug().toLowerCase().contains(value.toLowerCase()))
+                        .collect(Collectors.toList());
+                break;
+        }
+
+        return result;
     }
 }

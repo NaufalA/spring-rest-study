@@ -6,8 +6,11 @@ import com.enigmacamp.restapiintro.repositories.CourseRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -44,5 +47,33 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public String remove(String id) {
         return courseRepository.delete(id);
+    }
+
+    @Override
+    public Set<Course> getAll(Course filter, Boolean shouldMatchAll) {
+        Set<Course> courseSet = new HashSet<>();
+
+        if (filter.getTitle() != null) {
+            courseSet.addAll(courseRepository.findAll("title", filter.getTitle()));
+        }
+        if (filter.getDescription() != null) {
+            if (shouldMatchAll) {
+                courseSet = courseSet.stream()
+                        .filter(c -> c.getDescription().toLowerCase().contains(filter.getDescription().toLowerCase()))
+                        .collect(Collectors.toSet());
+            } else {
+                courseSet.addAll(courseRepository.findAll("description", filter.getDescription()));
+            }
+        }
+        if (filter.getSlug() != null) {
+            if (shouldMatchAll) {
+                courseSet = courseSet.stream()
+                        .filter(c -> c.getSlug().toLowerCase().contains(filter.getSlug().toLowerCase()))
+                        .collect(Collectors.toSet());
+            } else {
+                courseSet.addAll(courseRepository.findAll("slug", filter.getSlug()));
+            }
+        }
+        return courseSet;
     }
 }
