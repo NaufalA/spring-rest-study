@@ -1,8 +1,13 @@
 package com.enigmacamp.restapiintro.models.dtos.requests;
 
+import javax.validation.constraints.NotBlank;
+
 public class CreateCourseRequestDto {
+    @NotBlank(message = "Title cannot be empty")
     private String title;
+    @NotBlank(message = "Description cannot be empty")
     private String description;
+    @NotBlank(message = "Link cannot be empty")
     private String slug;
 
     public String getTitle() {

@@ -4,30 +4,29 @@ import com.enigmacamp.restapiintro.models.Course;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.services.CourseService;
 import com.enigmacamp.restapiintro.shared.classes.CommonResponse;
-import com.enigmacamp.restapiintro.shared.classes.ErrorResponse;
 import com.enigmacamp.restapiintro.shared.classes.SuccessResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/courses")
 public class CourseController {
-    private CourseService courseService;
+    private final CourseService courseService;
 
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
 
     @PostMapping
-    public ResponseEntity<CommonResponse> create(@RequestBody CreateCourseRequestDto createCourseRequestDto) {
+    public ResponseEntity<CommonResponse> create(@Valid @RequestBody CreateCourseRequestDto createCourseRequestDto) {
+
         Course createdCourse = courseService.create(createCourseRequestDto);
         SuccessResponse<Course> response = new SuccessResponse<>(
                 HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), createdCourse

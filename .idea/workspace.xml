@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7bb495f1-b7fc-443d-bf9c-24fb54f1434a" name="Changes" comment="Add ExceptionController class responsible for Exception handling">
+    <list default="true" id="7bb495f1-b7fc-443d-bf9c-24fb54f1434a" name="Changes" comment="Refactor filter method using java reflection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/CourseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/ExceptionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/ExceptionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/models/dtos/requests/CreateCourseRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/models/dtos/requests/CreateCourseRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/shared/classes/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/shared/classes/ErrorResponse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +125,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669792366356</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Refactor filter method using java reflection">
+      <created>1669798348937</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1669798348937</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -145,7 +153,8 @@
     <MESSAGE value="Add Response Wrapper class" />
     <MESSAGE value="Add filtering to getAll feature" />
     <MESSAGE value="Add ExceptionController class responsible for Exception handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add ExceptionController class responsible for Exception handling" />
+    <MESSAGE value="Refactor filter method using java reflection" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor filter method using java reflection" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
