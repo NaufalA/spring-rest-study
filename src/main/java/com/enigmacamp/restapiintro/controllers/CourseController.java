@@ -28,18 +28,11 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<CommonResponse> create(@RequestBody CreateCourseRequestDto createCourseRequestDto) {
-        try {
-            Course createdCourse = courseService.create(createCourseRequestDto);
-            SuccessResponse<Course> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), createdCourse
-            );
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        Course createdCourse = courseService.create(createCourseRequestDto);
+        SuccessResponse<Course> response = new SuccessResponse<>(
+                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), createdCourse
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
@@ -49,103 +42,57 @@ public class CourseController {
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "filterType", required = false) String filterType
     ) {
-        try {
-            if (title == null && description == null && link == null) {
-                List<Course> courses = courseService.getAll();
-                SuccessResponse<List<Course>> response = new SuccessResponse<>(
-                        HttpStatus.OK.value(), HttpStatus.OK.toString(), courses
-                );
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            } else {
-                Course filterModel = new Course();
-                filterModel.setTitle(title);
-                filterModel.setDescription(description);
-                filterModel.setSlug(link);
-                Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
-
-                Set<Course> courseSet = courseService.getAll(filterModel, shouldMatchAll);
-                CommonResponse response = new SuccessResponse<>(
-                        HttpStatus.OK.value(),
-                        HttpStatus.OK.toString(),
-                        courseSet
-                );
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }
-        } catch (Exception e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
+        if (title == null && description == null && link == null) {
+            List<Course> courses = courseService.getAll();
+            SuccessResponse<List<Course>> response = new SuccessResponse<>(
+                    HttpStatus.OK.value(), HttpStatus.OK.toString(), courses
             );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            Course filterModel = new Course();
+            filterModel.setTitle(title);
+            filterModel.setDescription(description);
+            filterModel.setSlug(link);
+            Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
+
+            Set<Course> courseSet = courseService.getAll(filterModel, shouldMatchAll);
+            CommonResponse response = new SuccessResponse<>(
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.toString(),
+                    courseSet
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CommonResponse> getById(@PathVariable("id") String id) {
-        try {
-            Optional<Course> course = courseService.getById(id);
-            if (course.isPresent()) {
-                SuccessResponse<Course> response = new SuccessResponse<>(
-                        HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), course.get()
-                );
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            } else {
-                ErrorResponse response = new ErrorResponse(
-                        HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase()
-                );
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-            }
-        } catch (NotFoundException e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase()
+        Optional<Course> course = courseService.getById(id);
+        if (course.isPresent()) {
+            SuccessResponse<Course> response = new SuccessResponse<>(
+                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), course.get()
             );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } else {
+            throw new NotFoundException("No Course with ID " + id);
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CommonResponse> update(@PathVariable("id") String id, @RequestBody Course course) {
-        try {
-            Course savedCourse = courseService.update(id, course);
-            SuccessResponse<Course> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), savedCourse
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (NotFoundException e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase()
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        Course savedCourse = courseService.update(id, course);
+        SuccessResponse<Course> response = new SuccessResponse<>(
+                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), savedCourse
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse> remove(@PathVariable("id") String id) {
-        try {
-            String deletedId = courseService.remove(id);
-            SuccessResponse<String> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), deletedId
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (NotFoundException e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase()
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (Exception e) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
-            );
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+        String deletedId = courseService.remove(id);
+        SuccessResponse<String> response = new SuccessResponse<>(
+                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), deletedId
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

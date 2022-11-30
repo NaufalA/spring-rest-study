@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7bb495f1-b7fc-443d-bf9c-24fb54f1434a" name="Changes" comment="Add Response Wrapper class">
+    <list default="true" id="7bb495f1-b7fc-443d-bf9c-24fb54f1434a" name="Changes" comment="Add filtering to getAll feature">
       <change afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/ExceptionController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/controllers/CourseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/repositories/CourseRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/services/CourseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/shared/exceptions/NotFoundException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/enigmacamp/restapiintro/shared/exceptions/NotFoundException.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669778139265</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Add filtering to getAll feature">
+      <created>1669791940973</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1669791940973</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -131,6 +136,7 @@
     <MESSAGE value="Add course feature" />
     <MESSAGE value="Update API request and response object" />
     <MESSAGE value="Add Response Wrapper class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Response Wrapper class" />
+    <MESSAGE value="Add filtering to getAll feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add filtering to getAll feature" />
   </component>
 </project>

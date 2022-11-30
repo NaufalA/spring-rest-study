@@ -53,7 +53,7 @@ public class CourseRepositoryImpl implements CourseRepository {
             courses.set(courses.indexOf(exsistingCourse.get()), exsistingCourse.get());
             return exsistingCourse.get();
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException("No Course with ID " + id);
         }
     }
 
@@ -64,7 +64,7 @@ public class CourseRepositoryImpl implements CourseRepository {
             courses.remove(exsistingCourse.get());
             return id;
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException("No Course with ID " + id);
         }
     }
 
