@@ -1,11 +1,11 @@
-package com.enigmacamp.restapiintro.repositories;
+package com.enigmacamp.restapiintro.repositories.interfaces;
 
 import com.enigmacamp.restapiintro.models.Course;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CourseRepository {
+public interface ArrayCourseRepository {
     Course insert(Course course);
 
     List<Course> findAll();

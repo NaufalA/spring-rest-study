@@ -2,10 +2,15 @@ package com.enigmacamp.restapiintro.controllers;
 
 import com.enigmacamp.restapiintro.models.Course;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
-import com.enigmacamp.restapiintro.services.CourseService;
+import com.enigmacamp.restapiintro.services.interfaces.CourseService;
 import com.enigmacamp.restapiintro.shared.classes.CommonResponse;
+import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
 import com.enigmacamp.restapiintro.shared.classes.SuccessResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,32 +41,59 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<CommonResponse> getAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "link", required = false) String link,
-            @RequestParam(value = "filterType", required = false) String filterType
+            @RequestParam(value = "filterType", required = false) String filterType,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "direction", required = false) String direction,
+            @RequestParam(value = "useNative", required = false) boolean useNative
     ) throws Exception {
-        if (title == null && description == null && link == null) {
-            List<Course> courses = courseService.getAll();
-            SuccessResponse<List<Course>> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.toString(), courses
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+        Pageable pageable;
+        if (sortBy != null) {
+            if (direction != null) {
+                pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
+            } else {
+                pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+            }
         } else {
-            Course filterModel = new Course();
-            filterModel.setTitle(title);
-            filterModel.setDescription(description);
-            filterModel.setSlug(link);
-            Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
+            pageable = PageRequest.of(page, size);
+        }
 
-            Set<Course> courseSet = courseService.getAll(filterModel, shouldMatchAll);
-            CommonResponse response = new SuccessResponse<>(
+        if (useNative) {
+            PagedResponse<Course> pagedCourses = courseService.getAllPaged(pageable);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>(
                     HttpStatus.OK.value(),
                     HttpStatus.OK.toString(),
-                    courseSet
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+                    pagedCourses
+            ));
         }
+
+        Course filterModel = new Course();
+        filterModel.setTitle(title);
+        filterModel.setDescription(description);
+        filterModel.setSlug(link);
+        Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
+
+        Iterable<Course> courses = courseService.getAll(filterModel, shouldMatchAll, pageable);
+        CommonResponse response;
+        if (courses instanceof Page) {
+            response = new SuccessResponse<>(
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.toString(),
+                    new PagedResponse<>((Page<Course>) courses)
+            );
+        } else {
+            response = new SuccessResponse<>(
+                    HttpStatus.OK.value(),
+                    HttpStatus.OK.toString(),
+                    courses
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/{id}")

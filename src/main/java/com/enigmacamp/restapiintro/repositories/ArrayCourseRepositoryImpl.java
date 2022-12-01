@@ -1,6 +1,7 @@
 package com.enigmacamp.restapiintro.repositories;
 
 import com.enigmacamp.restapiintro.models.Course;
+import com.enigmacamp.restapiintro.repositories.interfaces.ArrayCourseRepository;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
 import com.enigmacamp.restapiintro.shared.utils.IRandomStringGenerator;
 import org.springframework.stereotype.Repository;
@@ -12,11 +13,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class CourseRepositoryImpl implements CourseRepository {
+public class ArrayCourseRepositoryImpl implements ArrayCourseRepository {
     private List<Course> courses;
     private IRandomStringGenerator randomStringGenerator;
 
-    public CourseRepositoryImpl(IRandomStringGenerator randomStringGenerator) {
+    public ArrayCourseRepositoryImpl(IRandomStringGenerator randomStringGenerator) {
         this.randomStringGenerator = randomStringGenerator;
         this.courses = new ArrayList<>();
     }
