@@ -9,5 +9,8 @@ spring:
       ddl-auto: update
     show-sql: true
 
+server:
+  port: ${SERVER_PORT}
+
 storage:
   type: ${STORAGE_TYPE}
