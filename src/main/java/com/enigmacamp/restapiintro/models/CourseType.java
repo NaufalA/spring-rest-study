@@ -31,4 +31,12 @@ public class CourseType extends UUIDBaseEntity {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
+
+    @Override
+    public String toString() {
+        return "CourseType{" +
+                "id='" + getId() + '\'' +
+                "typeName='" + typeName + '\'' +
+                '}';
+    }
 }

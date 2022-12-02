@@ -60,4 +60,15 @@ public class Course extends UUIDBaseEntity {
     public void setSlug(String slug) {
         this.slug = slug;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", slug='" + slug + '\'' +
+                ", courseType=" + courseType +
+                ", courseInfo=" + courseInfo +
+                '}';
+    }
 }
