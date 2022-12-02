@@ -7,14 +7,13 @@ import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CourseService {
     Course create(CreateCourseRequestDto createCourseRequestDto);
 
-    Iterable<Course> getAll(Pageable pageable);
-    Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) throws Exception;
+    Page<Course> getAll(Pageable pageable);
+    
     Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) throws Exception;
 
     Optional<Course> getById(String id);
@@ -22,7 +21,6 @@ public interface CourseService {
     Course update(String id, Course course);
 
     String remove(String id);
-
 
     PagedResponse<Course> getAllPaged(Pageable pageable);
 }

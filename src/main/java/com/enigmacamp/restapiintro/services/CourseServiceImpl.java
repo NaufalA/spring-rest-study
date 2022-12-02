@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
@@ -40,13 +42,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Iterable<Course> getAll(Pageable pageable) {
+    public Page<Course> getAll(Pageable pageable) {
         return courseRepository.findAll(pageable);
-    }
-
-    @Override
-    public Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) {
-        return null;
     }
 
     @Override
