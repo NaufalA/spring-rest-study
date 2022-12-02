@@ -1,32 +1,40 @@
 package com.enigmacamp.restapiintro.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.enigmacamp.restapiintro.shared.models.UUIDBaseEntity;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "courses")
-public class Course {
-    @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name = "id", nullable = false)
-    private String id;
-
+public class Course extends UUIDBaseEntity {
     @Column(name = "title", nullable = false, length = 150, unique = true)
     private String title;
     @Column(name = "description", nullable = false, length = 250)
     private String description;
     @Column(name = "slug", nullable = false, length = 200, unique = true)
     private String slug;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_type_id")
+    private CourseType courseType;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_info_id")
+    private CourseInfo courseInfo;
 
-    public String getId() {
-        return id;
+    public CourseInfo getCourseInfo() {
+        return courseInfo;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCourseInfo(CourseInfo courseInfo) {
+        this.courseInfo = courseInfo;
+    }
+
+
+    public CourseType getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(CourseType courseType) {
+        this.courseType = courseType;
     }
 
     public String getTitle() {

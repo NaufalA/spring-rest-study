@@ -16,9 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/courses")
@@ -47,20 +45,12 @@ public class CourseController {
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "link", required = false) String link,
             @RequestParam(value = "filterType", required = false) String filterType,
-            @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "direction", required = false) String direction,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
             @RequestParam(value = "useNative", required = false) boolean useNative
     ) throws Exception {
         Pageable pageable;
-        if (sortBy != null) {
-            if (direction != null) {
-                pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
-            } else {
-                pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-            }
-        } else {
-            pageable = PageRequest.of(page, size);
-        }
+        pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
 
         if (useNative) {
             PagedResponse<Course> pagedCourses = courseService.getAllPaged(pageable);

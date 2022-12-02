@@ -1,6 +1,9 @@
 package com.enigmacamp.restapiintro.models.dtos.requests;
 
+import com.enigmacamp.restapiintro.models.CourseType;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreateCourseRequestDto {
     @NotBlank(message = "Title cannot be empty")
@@ -9,6 +12,12 @@ public class CreateCourseRequestDto {
     private String description;
     @NotBlank(message = "Link cannot be empty")
     private String slug;
+
+    @NotNull(message = "Course Type cannot be empty")
+    private CourseType courseType;
+
+    @NotNull(message = "Course Info cannot be empty")
+    private CreateCourseInfoRequestDto courseInfo;
 
     public String getTitle() {
         return title;
@@ -32,5 +41,21 @@ public class CreateCourseRequestDto {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public CourseType getCourseType() {
+        return courseType;
+    }
+
+    public void setCourseType(CourseType courseType) {
+        this.courseType = courseType;
+    }
+
+    public CreateCourseInfoRequestDto getCourseInfo() {
+        return courseInfo;
+    }
+
+    public void setCourseInfo(CreateCourseInfoRequestDto courseInfo) {
+        this.courseInfo = courseInfo;
     }
 }

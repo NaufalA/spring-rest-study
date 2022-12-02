@@ -2,32 +2,39 @@ package com.enigmacamp.restapiintro.services;
 
 import com.enigmacamp.restapiintro.models.Course;
 import com.enigmacamp.restapiintro.models.CourseSpecification;
+import com.enigmacamp.restapiintro.models.CourseType;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.repositories.interfaces.CourseRepository;
 import com.enigmacamp.restapiintro.services.interfaces.CourseService;
+import com.enigmacamp.restapiintro.services.interfaces.CourseTypeService;
 import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
+    private CourseTypeService courseTypeService;
+    @Autowired
     private ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public Course create(CreateCourseRequestDto createCourseRequestDto) {
-        return courseRepository.save(modelMapper.map(createCourseRequestDto, Course.class));
+        Course course = modelMapper.map(createCourseRequestDto, Course.class);
+        Optional<CourseType> courseType = courseTypeService.getById(createCourseRequestDto.getCourseType().getId());
+        courseType.ifPresent(course::setCourseType);
+
+        return courseRepository.save(course);
     }
 
     @Override
@@ -66,14 +73,25 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public Course update(String id, Course course) {
         Optional<Course> existingCourse = getById(id);
-        if (existingCourse.isPresent()) {
-            course.setId(existingCourse.get().getId());
-            return courseRepository.save(course);
-        } else {
+        if (existingCourse.isEmpty()) {
             throw new NotFoundException("Course Data Not Found");
         }
+
+        Optional<CourseType> updatedCourseType = courseTypeService.getById(course.getCourseType().getId());
+        if (updatedCourseType.isEmpty()) {
+            throw new NotFoundException("Course Type Data Not Found");
+        } else if (!existingCourse.get().getCourseType().equals(updatedCourseType.get())) {
+            existingCourse.get().setCourseType(updatedCourseType.get());
+        }
+
+        if (!existingCourse.get().getCourseInfo().equals(course.getCourseInfo())) {
+            existingCourse.get().setCourseInfo(course.getCourseInfo());
+        }
+
+        return courseRepository.save(existingCourse.get());
     }
 
     @Override
