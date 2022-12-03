@@ -22,13 +22,13 @@ public class ExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAnyException(Exception e) {
-        ErrorResponse response = new ErrorResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleAnyException(Exception e) {
+//        ErrorResponse response = new ErrorResponse<>(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
+//        );
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<List<String>>> handleMethodArgument(MethodArgumentNotValidException e) {

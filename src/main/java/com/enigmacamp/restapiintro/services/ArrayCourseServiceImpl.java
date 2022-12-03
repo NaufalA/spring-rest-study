@@ -5,8 +5,10 @@ import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.repositories.interfaces.ArrayCourseRepository;
 import com.enigmacamp.restapiintro.services.interfaces.CourseService;
 import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
+import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.Field;
@@ -73,6 +75,11 @@ public class ArrayCourseServiceImpl implements CourseService {
             }
         }
         return courseSet;
+    }
+
+    @Override
+    public Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) throws Exception {
+        return null;
     }
 
     @Override

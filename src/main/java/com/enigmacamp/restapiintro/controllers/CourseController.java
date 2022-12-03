@@ -7,6 +7,7 @@ import com.enigmacamp.restapiintro.shared.classes.CommonResponse;
 import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
 import com.enigmacamp.restapiintro.shared.classes.SuccessResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
+import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -41,13 +44,10 @@ public class CourseController {
     public ResponseEntity<CommonResponse> getAll(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "description", required = false) String description,
-            @RequestParam(value = "link", required = false) String link,
-            @RequestParam(value = "filterType", required = false) String filterType,
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction,
-            @RequestParam(value = "useNative", required = false) boolean useNative
+            @RequestParam(value = "useNative", required = false) boolean useNative,
+            @RequestBody(required = false) List<SearchCriteria> criteria
     ) throws Exception {
         Pageable pageable;
         pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
@@ -62,27 +62,15 @@ public class CourseController {
             ));
         }
 
-        Course filterModel = new Course();
-        filterModel.setTitle(title);
-        filterModel.setDescription(description);
-        filterModel.setSlug(link);
-        Boolean shouldMatchAll = filterType != null && filterType.equalsIgnoreCase("and");
-
-        Iterable<Course> courses = courseService.getAll(filterModel, shouldMatchAll, pageable);
+        List<SearchCriteria> searchCriteria = criteria != null ? criteria : new ArrayList<>();
+        Page<Course> courses = courseService.getAll(searchCriteria, pageable);
         CommonResponse response;
-        if (courses instanceof Page) {
-            response = new SuccessResponse<>(
-                    HttpStatus.OK.value(),
-                    HttpStatus.OK.toString(),
-                    new PagedResponse<>((Page<Course>) courses)
-            );
-        } else {
-            response = new SuccessResponse<>(
-                    HttpStatus.OK.value(),
-                    HttpStatus.OK.toString(),
-                    courses
-            );
-        }
+        response = new SuccessResponse<>(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.toString(),
+                new PagedResponse<>(courses)
+        );
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -1,7 +1,7 @@
 package com.enigmacamp.restapiintro.services;
 
 import com.enigmacamp.restapiintro.models.Course;
-import com.enigmacamp.restapiintro.models.CourseSpecification;
+import com.enigmacamp.restapiintro.repositories.specifications.CourseSpecification;
 import com.enigmacamp.restapiintro.models.CourseType;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.repositories.interfaces.CourseRepository;
@@ -9,6 +9,8 @@ import com.enigmacamp.restapiintro.services.interfaces.CourseService;
 import com.enigmacamp.restapiintro.services.interfaces.CourseTypeService;
 import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
+import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
+import com.enigmacamp.restapiintro.shared.utils.SearchOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Optional;
 
 public class CourseServiceImpl implements CourseService {
@@ -43,24 +45,23 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) throws Exception {
-        Field[] fields = filter.getClass().getDeclaredFields();
+    public Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) {
+        return null;
+    }
 
-        Specification<Course> courseSpecification = Specification.where(null);
+    @Override
+    public Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) {
+        Specification<Course> courseSpecification = Specification.where(new CourseSpecification(searchCriteria.get(0)));
 
-        for (Field field : fields) {
-            field.setAccessible(true);
-            if (field.get(filter) != null) {
-                CourseSpecification newSpecs = new CourseSpecification(
-                        field.getName(),
-                        field.get(filter).toString(),
-                        "contains"
-                );
-                if (shouldMatchAll) {
-                    courseSpecification = Specification.where(courseSpecification).and(newSpecs);
-                } else {
-                    courseSpecification = Specification.where(courseSpecification).or(newSpecs);
-                }
+        for (int i = 1; i < searchCriteria.size(); i++) {
+            SearchCriteria searchCriterion = searchCriteria.get(i);
+            CourseSpecification newSpecs = new CourseSpecification(
+                    searchCriterion
+            );
+            if (searchCriterion.getSearchOperation() == SearchOperation.AND) {
+                courseSpecification = Specification.where(courseSpecification).and(newSpecs);
+            } else {
+                courseSpecification = Specification.where(courseSpecification).or(newSpecs);
             }
         }
 
