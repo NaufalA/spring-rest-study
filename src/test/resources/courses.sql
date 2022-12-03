@@ -15,11 +15,13 @@ INTO
   course_infos
   (id, duration, level)
 VALUES
-  ('CI10', 30, 2);
+  ('CI10', 30, 2),
+  ('CI11', 30, 2);
 
 INSERT
 INTO
   courses
   (id, title, description, slug, course_type_id, course_info_id)
 VALUES
-  ('C10', 'Dummy Course 10', 'Dummy Course 10 Description', 'dummy-10', '1', 'CI10');
+  ('C10', 'Dummy Course 10', 'Dummy Course 10 Description', 'dummy-10', '1', 'CI10'),
+  ('C11', 'Dummy Course 11', 'Dummy Course 11 Description', 'dummy-11', '1', 'CI11');

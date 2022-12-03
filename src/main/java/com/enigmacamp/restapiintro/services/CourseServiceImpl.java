@@ -82,14 +82,10 @@ public class CourseServiceImpl implements CourseService {
         if (updatedCourseType.isEmpty()) {
             throw new NotFoundException("Course Type Data Not Found");
         } else if (!existingCourse.get().getCourseType().equals(updatedCourseType.get())) {
-            existingCourse.get().setCourseType(updatedCourseType.get());
+            course.setCourseType(updatedCourseType.get());
         }
 
-        if (!existingCourse.get().getCourseInfo().equals(course.getCourseInfo())) {
-            existingCourse.get().setCourseInfo(course.getCourseInfo());
-        }
-
-        return courseRepository.save(existingCourse.get());
+        return courseRepository.save(course);
     }
 
     @Override
