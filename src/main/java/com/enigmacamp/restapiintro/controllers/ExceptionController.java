@@ -18,7 +18,7 @@ public class ExceptionController {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleErrorException(NotFoundException e) {
         ErrorResponse response = new ErrorResponse<>(
-                HttpStatus.NOT_FOUND.toString(), e.getMessage()
+                HttpStatus.NOT_FOUND.toString(), "Data Not Found", e.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }

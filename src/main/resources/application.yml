@@ -18,3 +18,5 @@ storage:
 service:
   payment:
     url: ${SERVICE_PAYMENT_URL}
+  user:
+    url: ${SERVICE_USER_URL}
