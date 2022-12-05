@@ -32,7 +32,7 @@ public class CourseTypeController {
 
         CourseType createdCourseType = courseTypeService.create(createCourseTypeRequestDto);
         SuccessResponse<CourseType> response = new SuccessResponse<>(
-                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), createdCourseType
+                HttpStatus.OK.toString(), HttpStatus.OK.getReasonPhrase(), createdCourseType
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -57,7 +57,7 @@ public class CourseTypeController {
 
         CommonResponse response;
         response = new SuccessResponse<>(
-                HttpStatus.OK.value(),
+                HttpStatus.OK.toString(),
                 HttpStatus.OK.toString(),
                 new PagedResponse<>(courseTypes)
         );
@@ -69,7 +69,7 @@ public class CourseTypeController {
         Optional<CourseType> courseType = courseTypeService.getById(id);
         if (courseType.isPresent()) {
             SuccessResponse<CourseType> response = new SuccessResponse<>(
-                    HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), courseType.get()
+                    HttpStatus.OK.toString(), HttpStatus.OK.getReasonPhrase(), courseType.get()
             );
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
@@ -81,7 +81,7 @@ public class CourseTypeController {
     public ResponseEntity<CommonResponse> update(@PathVariable("id") String id, @RequestBody CourseType courseType) {
         CourseType savedCourseType = courseTypeService.update(id, courseType);
         SuccessResponse<CourseType> response = new SuccessResponse<>(
-                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), savedCourseType
+                HttpStatus.OK.toString(), HttpStatus.OK.getReasonPhrase(), savedCourseType
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -90,7 +90,7 @@ public class CourseTypeController {
     public ResponseEntity<CommonResponse> remove(@PathVariable("id") String id) {
         String deletedId = courseTypeService.remove(id);
         SuccessResponse<String> response = new SuccessResponse<>(
-                HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), deletedId
+                HttpStatus.OK.toString(), HttpStatus.OK.getReasonPhrase(), deletedId
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

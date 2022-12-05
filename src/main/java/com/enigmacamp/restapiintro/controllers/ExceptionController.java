@@ -17,7 +17,7 @@ public class ExceptionController {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleErrorException(NotFoundException e) {
         ErrorResponse response = new ErrorResponse<>(
-                HttpStatus.NOT_FOUND.value(), e.getMessage()
+                HttpStatus.NOT_FOUND.toString(), e.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
@@ -25,7 +25,7 @@ public class ExceptionController {
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ErrorResponse> handleAnyException(Exception e) {
 //        ErrorResponse response = new ErrorResponse<>(
-//                HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
+//                HttpStatus.INTERNAL_SERVER_ERROR.toString(), e.getMessage()
 //        );
 //        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 //    }
@@ -36,7 +36,7 @@ public class ExceptionController {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
         ErrorResponse<List<String>> response = new ErrorResponse<>(
-                HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), fieldErrors
+                HttpStatus.BAD_REQUEST.toString(), HttpStatus.BAD_REQUEST.getReasonPhrase(), fieldErrors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

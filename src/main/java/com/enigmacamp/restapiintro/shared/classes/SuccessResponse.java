@@ -3,7 +3,7 @@ package com.enigmacamp.restapiintro.shared.classes;
 public class SuccessResponse<T> extends CommonResponse {
     private T data;
 
-    public SuccessResponse(Integer code, String message, T data) {
+    public SuccessResponse(String code, String message, T data) {
         super.setCode(code);
         super.setStatus("SUCCESS");
         super.setMessage(message);

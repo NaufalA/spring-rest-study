@@ -1,15 +1,15 @@
 package com.enigmacamp.restapiintro.shared.classes;
 
 public abstract class CommonResponse {
-    private Integer code;
+    private String code;
     private String status;
     private String message;
 
-    public Integer getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Integer code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
