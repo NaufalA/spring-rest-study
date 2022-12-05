@@ -2,6 +2,7 @@ package com.enigmacamp.restapiintro.controllers;
 
 import com.enigmacamp.restapiintro.shared.classes.ErrorResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
+import com.enigmacamp.restapiintro.shared.exceptions.RestTemplateException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,13 @@ public class ExceptionController {
                 HttpStatus.BAD_REQUEST.toString(), HttpStatus.BAD_REQUEST.getReasonPhrase(), fieldErrors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(RestTemplateException.class)
+    public ResponseEntity<ErrorResponse<String>> handleRestTemplateException(RestTemplateException e) {
+        ErrorResponse<String> response = new ErrorResponse<>(
+                "X07", "Rest Template Error", e.getMessage()
+        );
+        return ResponseEntity.status(e.getStatus()).body(response);
     }
 }

@@ -2,6 +2,10 @@ package com.enigmacamp.restapiintro.shared.classes;
 
 public class ErrorResponse<T> extends CommonResponse {
     private T reason;
+
+    public ErrorResponse() {
+    }
+
     public ErrorResponse(String code, String message) {
         super.setCode(code);
         super.setStatus("ERROR");

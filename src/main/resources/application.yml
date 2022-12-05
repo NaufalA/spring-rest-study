@@ -14,3 +14,7 @@ server:
 
 storage:
   type: ${STORAGE_TYPE}
+
+service:
+  payment:
+    url: ${SERVICE_PAYMENT_URL}
