@@ -31,8 +31,8 @@ public class ArrayCourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Iterable<Course> getAll(Pageable pageable) {
-        return courseRepository.findAll();
+    public Page<Course> getAll(Pageable pageable) {
+        return null;
     }
 
     @Override

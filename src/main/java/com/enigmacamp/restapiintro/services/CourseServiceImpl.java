@@ -1,18 +1,23 @@
 package com.enigmacamp.restapiintro.services;
 
 import com.enigmacamp.restapiintro.models.Course;
+import com.enigmacamp.restapiintro.models.CourseInfo;
+import com.enigmacamp.restapiintro.models.CourseMaterial;
 import com.enigmacamp.restapiintro.repositories.specifications.CourseSpecification;
 import com.enigmacamp.restapiintro.models.CourseType;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.repositories.interfaces.CourseRepository;
 import com.enigmacamp.restapiintro.services.interfaces.CourseService;
 import com.enigmacamp.restapiintro.services.interfaces.CourseTypeService;
+import com.enigmacamp.restapiintro.services.interfaces.FileService;
 import com.enigmacamp.restapiintro.shared.classes.PagedResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
+import com.enigmacamp.restapiintro.shared.utils.FileChecksumUtility;
 import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
 import com.enigmacamp.restapiintro.shared.utils.SearchOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,22 +30,49 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
+    private FileService fileService;
+    @Autowired
     private CourseTypeService courseTypeService;
     @Autowired
     private ModelMapper modelMapper;
 
     @Override
     @Transactional
-    public Course create(CreateCourseRequestDto createCourseRequestDto) {
-        Course course = modelMapper.map(createCourseRequestDto, Course.class);
-        Optional<CourseType> courseType = courseTypeService.getById(createCourseRequestDto.getCourseType().getId());
-        courseType.ifPresent(course::setCourseType);
+    public Course create(CreateCourseRequestDto createCourseRequestDto) throws Exception {
+        try {
+            // Map dto data into model
+            Course course = modelMapper.map(createCourseRequestDto, Course.class);
+            Optional<CourseType> courseType = courseTypeService.getById(createCourseRequestDto.getCourseTypeId());
+            courseType.ifPresent(course::setCourseType);
+            CourseInfo courseInfo = new CourseInfo();
+            courseInfo.setDuration(createCourseRequestDto.getDuration());
+            courseInfo.setLevel(createCourseRequestDto.getLevel());
+            course.setCourseInfo(courseInfo);
 
-        return courseRepository.save(course);
+            // Save material file
+            String savedPath = fileService.upload(createCourseRequestDto.getMaterial());
+            Resource savedFile = fileService.download(savedPath);
+
+            CourseMaterial courseMaterial = new CourseMaterial();
+            courseMaterial.setTitle(createCourseRequestDto.getMaterialTitle());
+            courseMaterial.setFilename(createCourseRequestDto.getMaterial().getOriginalFilename());
+            courseMaterial.setFileHash(FileChecksumUtility.getMd5FileCheckSum(savedFile.getFile()));
+            courseMaterial.setFileUrl(savedPath);
+
+            course.getCourseMaterialList().add(courseMaterial);
+            courseMaterial.setRelatedCourse(course);
+
+            return courseRepository.save(course);
+        } catch (Exception e) {
+            if (fileService.download(createCourseRequestDto.getMaterial().getOriginalFilename()) != null) {
+                fileService.remove(createCourseRequestDto.getMaterial().getOriginalFilename());
+            }
+            throw e;
+        }
     }
 
     @Override
-    public Iterable<Course> getAll(Pageable pageable) {
+    public Page<Course> getAll(Pageable pageable) {
         return courseRepository.findAll(pageable);
     }
 

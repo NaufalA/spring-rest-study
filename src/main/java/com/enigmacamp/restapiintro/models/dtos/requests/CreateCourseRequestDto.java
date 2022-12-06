@@ -1,6 +1,6 @@
 package com.enigmacamp.restapiintro.models.dtos.requests;
 
-import com.enigmacamp.restapiintro.models.CourseType;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,16 +8,25 @@ import javax.validation.constraints.NotNull;
 public class CreateCourseRequestDto {
     @NotBlank(message = "Title cannot be empty")
     private String title;
+
     @NotBlank(message = "Description cannot be empty")
     private String description;
+
     @NotBlank(message = "Link cannot be empty")
     private String slug;
 
-    @NotNull(message = "Course Type cannot be empty")
-    private CourseType courseType;
+    @NotBlank(message = "Course Type cannot be empty")
+    private String courseTypeId;
 
-    @NotNull(message = "Course Info cannot be empty")
-    private CreateCourseInfoRequestDto courseInfo;
+    @NotNull(message = "Course Duration cannot be empty")
+    private Integer duration;
+
+    @NotNull(message = "Course Level cannot be empty")
+    private Integer level;
+
+    private String materialTitle;
+    @NotNull(message = "Material cannot be empty")
+    private MultipartFile material;
 
     public String getTitle() {
         return title;
@@ -43,19 +52,43 @@ public class CreateCourseRequestDto {
         this.slug = slug;
     }
 
-    public CourseType getCourseType() {
-        return courseType;
+    public String getCourseTypeId() {
+        return courseTypeId;
     }
 
-    public void setCourseType(CourseType courseType) {
-        this.courseType = courseType;
+    public void setCourseTypeId(String courseTypeId) {
+        this.courseTypeId = courseTypeId;
     }
 
-    public CreateCourseInfoRequestDto getCourseInfo() {
-        return courseInfo;
+    public Integer getDuration() {
+        return duration;
     }
 
-    public void setCourseInfo(CreateCourseInfoRequestDto courseInfo) {
-        this.courseInfo = courseInfo;
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public String getMaterialTitle() {
+        return materialTitle;
+    }
+
+    public void setMaterialTitle(String materialTitle) {
+        this.materialTitle = materialTitle;
+    }
+
+    public MultipartFile getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(MultipartFile material) {
+        this.material = material;
     }
 }

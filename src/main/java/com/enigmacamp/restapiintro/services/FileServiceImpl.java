@@ -6,6 +6,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Service
 public class FileServiceImpl implements FileService {
     private FileRepository fileRepository;
@@ -22,5 +24,10 @@ public class FileServiceImpl implements FileService {
     @Override
     public Resource download(String fileName) {
         return fileRepository.load(fileName);
+    }
+
+    @Override
+    public String remove(String fileName) throws IOException {
+        return fileRepository.delete(fileName);
     }
 }

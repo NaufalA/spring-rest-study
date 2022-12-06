@@ -3,6 +3,8 @@ package com.enigmacamp.restapiintro.models;
 import com.enigmacamp.restapiintro.shared.models.UUIDBaseEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -19,6 +21,9 @@ public class Course extends UUIDBaseEntity {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "course_info_id")
     private CourseInfo courseInfo;
+
+    @OneToMany(mappedBy = "relatedCourse", cascade = CascadeType.ALL)
+    private List<CourseMaterial> courseMaterialList = new ArrayList<>();
 
     public CourseInfo getCourseInfo() {
         return courseInfo;
@@ -59,5 +64,13 @@ public class Course extends UUIDBaseEntity {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public List<CourseMaterial> getCourseMaterialList() {
+        return courseMaterialList;
+    }
+
+    public void setCourseMaterialList(List<CourseMaterial> courseMaterialList) {
+        this.courseMaterialList = courseMaterialList;
     }
 }

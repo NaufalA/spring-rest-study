@@ -7,13 +7,14 @@ import com.enigmacamp.restapiintro.shared.utils.SearchCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface CourseService {
-    Course create(CreateCourseRequestDto createCourseRequestDto);
+    Course create(CreateCourseRequestDto createCourseRequestDto) throws IOException, Exception;
 
-    Iterable<Course> getAll(Pageable pageable);
+    Page<Course> getAll(Pageable pageable);
     Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) throws Exception;
     Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) throws Exception;
 

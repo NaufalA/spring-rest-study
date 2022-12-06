@@ -54,4 +54,13 @@ public class FileRepositoryImpl implements FileRepository {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String delete(String fileName) throws IOException {
+       Path targetPath = path.resolve(fileName);
+
+       Files.delete(targetPath);
+
+       return targetPath.toAbsolutePath().toString();
+    }
 }
