@@ -20,3 +20,8 @@ service:
     url: ${SERVICE_PAYMENT_URL}
   user:
     url: ${SERVICE_USER_URL}
+
+file:
+  upload:
+    path: ${FILE_UPLOAD_PATH}
+    allowed-types: ${FILE_UPLOAD_ALLOWED_TYPES:}

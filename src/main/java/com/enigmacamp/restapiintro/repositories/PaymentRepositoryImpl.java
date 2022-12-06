@@ -6,7 +6,6 @@ import com.enigmacamp.restapiintro.repositories.interfaces.PaymentRepository;
 import com.enigmacamp.restapiintro.shared.classes.ErrorResponse;
 import com.enigmacamp.restapiintro.shared.classes.SuccessResponse;
 import com.enigmacamp.restapiintro.shared.exceptions.RestTemplateException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
