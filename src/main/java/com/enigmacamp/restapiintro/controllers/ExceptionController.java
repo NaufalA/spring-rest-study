@@ -1,6 +1,7 @@
 package com.enigmacamp.restapiintro.controllers;
 
 import com.enigmacamp.restapiintro.shared.classes.ErrorResponse;
+import com.enigmacamp.restapiintro.shared.exceptions.DataExistException;
 import com.enigmacamp.restapiintro.shared.exceptions.NotFoundException;
 import com.enigmacamp.restapiintro.shared.exceptions.RestTemplateException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -21,6 +22,14 @@ public class ExceptionController {
                 HttpStatus.NOT_FOUND.toString(), "Data Not Found", e.getMessage()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(DataExistException.class)
+    public ResponseEntity<ErrorResponse> handleErrorException(DataExistException e) {
+        ErrorResponse response = new ErrorResponse<>(
+                HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Data Already Exist", e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
 //    @ExceptionHandler(Exception.class)

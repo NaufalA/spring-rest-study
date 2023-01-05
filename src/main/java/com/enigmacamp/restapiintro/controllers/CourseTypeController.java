@@ -47,7 +47,11 @@ public class CourseTypeController {
             @RequestParam(value = "direction", defaultValue = "ASC") String direction
     ) throws Exception {
         Pageable pageable;
-        pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
+        if (size <= 0) {
+            pageable = Pageable.unpaged();
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction), sortBy));
+        }
 
         CourseType filterModel = new CourseType();
         filterModel.setTypeName(typeName);

@@ -3,10 +3,10 @@ package com.enigmacamp.restapiintro.services;
 import com.enigmacamp.restapiintro.models.Course;
 import com.enigmacamp.restapiintro.models.CourseInfo;
 import com.enigmacamp.restapiintro.models.CourseMaterial;
-import com.enigmacamp.restapiintro.repositories.specifications.CourseSpecification;
 import com.enigmacamp.restapiintro.models.CourseType;
 import com.enigmacamp.restapiintro.models.dtos.requests.CreateCourseRequestDto;
 import com.enigmacamp.restapiintro.repositories.interfaces.CourseRepository;
+import com.enigmacamp.restapiintro.repositories.specifications.CourseSpecification;
 import com.enigmacamp.restapiintro.services.interfaces.CourseService;
 import com.enigmacamp.restapiintro.services.interfaces.CourseTypeService;
 import com.enigmacamp.restapiintro.services.interfaces.FileService;
@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class CourseServiceImpl implements CourseService {
@@ -49,6 +50,13 @@ public class CourseServiceImpl implements CourseService {
             courseInfo.setLevel(createCourseRequestDto.getLevel());
             course.setCourseInfo(courseInfo);
 
+            if (
+                    Objects.equals(createCourseRequestDto.getMaterialTitle(), "") ||
+                            createCourseRequestDto.getMaterial() == null
+            ) {
+                return courseRepository.save(course);
+            }
+
             // Save material file
             String savedPath = fileService.upload(createCourseRequestDto.getMaterial());
             Resource savedFile = fileService.download(savedPath);
@@ -64,8 +72,9 @@ public class CourseServiceImpl implements CourseService {
 
             return courseRepository.save(course);
         } catch (Exception e) {
-            if (fileService.download(createCourseRequestDto.getMaterial().getOriginalFilename()) != null) {
-                fileService.remove(createCourseRequestDto.getMaterial().getOriginalFilename());
+            String originalFilename = createCourseRequestDto.getMaterial().getOriginalFilename();
+            if (!Objects.equals(originalFilename, "") && fileService.download(originalFilename) != null) {
+                fileService.remove(originalFilename);
             }
             throw e;
         }
@@ -113,6 +122,9 @@ public class CourseServiceImpl implements CourseService {
             throw new NotFoundException("Course Data Not Found");
         }
 
+        existingCourse.get().setTitle(course.getTitle());
+        existingCourse.get().setDescription(course.getDescription());
+        existingCourse.get().setSlug(course.getSlug());
         Optional<CourseType> updatedCourseType = courseTypeService.getById(course.getCourseType().getId());
         if (updatedCourseType.isEmpty()) {
             throw new NotFoundException("Course Type Data Not Found");

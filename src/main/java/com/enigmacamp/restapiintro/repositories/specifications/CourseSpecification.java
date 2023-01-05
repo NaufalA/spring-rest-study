@@ -29,14 +29,14 @@ public class CourseSpecification implements Specification<Course> {
             default:
             case EQUALS:
                 if (searchCriteria.getValue() instanceof String) {
-                    return cb.equal(cb.lower(path), "%" + ((String) searchCriteria.getValue()).toLowerCase() + "%");
+                    return cb.equal(path, "%" + searchCriteria.getValue() + "%");
                 }
-                return cb.equal(path, "%" + searchCriteria.getValue() + "%");
+                return cb.equal(path, searchCriteria.getValue());
             case DOES_NOT_EQUAL:
                 if (searchCriteria.getValue() instanceof String) {
-                    return cb.notEqual(cb.lower(path), "%" + ((String) searchCriteria.getValue()).toLowerCase() + "%");
+                    return cb.notEqual(path, "%" + searchCriteria.getValue() + "%");
                 }
-                return cb.notEqual(path, "%" + searchCriteria.getValue() + "%");
+                return cb.notEqual(path, searchCriteria.getValue());
             case CONTAINS:
                 if (searchCriteria.getValue() instanceof String) {
                     return cb.equal(cb.lower(path), "%" + ((String) searchCriteria.getValue()).toLowerCase() + "%");

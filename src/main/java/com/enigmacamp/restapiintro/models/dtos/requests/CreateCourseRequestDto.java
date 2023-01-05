@@ -25,7 +25,7 @@ public class CreateCourseRequestDto {
     private Integer level;
 
     private String materialTitle;
-    @NotNull(message = "Material cannot be empty")
+
     private MultipartFile material;
 
     public String getTitle() {

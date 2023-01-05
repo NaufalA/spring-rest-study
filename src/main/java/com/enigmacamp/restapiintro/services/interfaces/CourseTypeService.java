@@ -16,6 +16,8 @@ public interface CourseTypeService {
 
     Optional<CourseType> getById(String id);
 
+    Optional<CourseType> getByTypeName(String typeName);
+
     CourseType update(String id, CourseType courseType);
 
     String remove(String id);
