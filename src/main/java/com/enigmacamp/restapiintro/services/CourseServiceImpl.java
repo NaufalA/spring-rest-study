@@ -21,12 +21,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Service
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseRepository courseRepository;
@@ -86,11 +88,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) {
-        return null;
-    }
-
-    @Override
     public Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) {
         Specification<Course> courseSpecification = Specification.where(new CourseSpecification(searchCriteria.get(0)));
 
@@ -129,14 +126,10 @@ public class CourseServiceImpl implements CourseService {
         if (updatedCourseType.isEmpty()) {
             throw new NotFoundException("Course Type Data Not Found");
         } else if (!existingCourse.get().getCourseType().equals(updatedCourseType.get())) {
-            existingCourse.get().setCourseType(updatedCourseType.get());
+            course.setCourseType(updatedCourseType.get());
         }
 
-        if (!existingCourse.get().getCourseInfo().equals(course.getCourseInfo())) {
-            existingCourse.get().setCourseInfo(course.getCourseInfo());
-        }
-
-        return courseRepository.save(existingCourse.get());
+        return courseRepository.save(course);
     }
 
     @Override

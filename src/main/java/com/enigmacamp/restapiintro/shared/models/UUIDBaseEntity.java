@@ -20,5 +20,4 @@ public class UUIDBaseEntity {
     public void setId(String id) {
         this.id = id;
     }
-
 }

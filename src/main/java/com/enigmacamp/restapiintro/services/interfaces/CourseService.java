@@ -15,7 +15,7 @@ public interface CourseService {
     Course create(CreateCourseRequestDto createCourseRequestDto) throws IOException, Exception;
 
     Page<Course> getAll(Pageable pageable);
-    Iterable<Course> getAll(Course filter, Boolean shouldMatchAll, Pageable pageable) throws Exception;
+
     Page<Course> getAll(List<SearchCriteria> searchCriteria, Pageable pageable) throws Exception;
 
     Optional<Course> getById(String id);
@@ -23,7 +23,6 @@ public interface CourseService {
     Course update(String id, Course course);
 
     String remove(String id);
-
 
     PagedResponse<Course> getAllPaged(Pageable pageable);
 }

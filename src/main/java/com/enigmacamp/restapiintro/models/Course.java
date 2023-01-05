@@ -15,7 +15,7 @@ public class Course extends UUIDBaseEntity {
     private String description;
     @Column(name = "slug", nullable = false, length = 200, unique = true)
     private String slug;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "course_type_id")
     private CourseType courseType;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

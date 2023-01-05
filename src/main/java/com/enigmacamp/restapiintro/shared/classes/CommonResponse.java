@@ -5,6 +5,9 @@ public abstract class CommonResponse {
     private String status;
     private String message;
 
+    public CommonResponse() {
+    }
+
     public String getCode() {
         return code;
     }
